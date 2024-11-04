@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ScaleGestureDetector;
 
 public class MainActivity extends AppCompatActivity {
     private Bitmap bitmap;
@@ -16,87 +15,68 @@ public class MainActivity extends AppCompatActivity {
     private Paint paintBrush;
     private float lastTouchX;
     private float lastTouchY;
-    private float sizeScale = 1.0f;
-    private float translateX = 0;
-    private float translateY = 0;
-    private float dx = 0;
-    private float dy = 0;
-    private static final int NONE = 0;
-    private static final int DRAG = 1;
-    private ScaleGestureDetector scaleGestureDetector;
+    private float totalTranslationX = 0f;
+    private float totalTranslationY = 0f;
+    private boolean tap = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initializeCanvas();
 
-        scaleGestureDetector = new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener() {
-          @Override
-          public boolean onScale(ScaleGestureDetector detector) {
-              sizeScale *= detector.getScaleFactor();
-              sizeScale = Math.max(0.1f, Math.min(sizeScale, 5.0f));
-              getWindow().getDecorView().postInvalidate();
-              return true;
-          }
-        });
+
 
         setContentView(new View(this) {
 
             @Override
             protected void onDraw(Canvas canvas) {
-                super.onDraw(canvas);
                 canvas.save();
-                canvas.translate(translateX, translateY);
-                canvas.scale(sizeScale, sizeScale);
+                canvas.translate(totalTranslationX, totalTranslationY);
                 canvas.drawBitmap(bitmap, 0, 0, null);
                 canvas.restore();
             }
 
             @Override
             public boolean onTouchEvent(MotionEvent event) {
-                scaleGestureDetector.onTouchEvent(event);
 
-                float scaledX = (event.getX() - translateX) / sizeScale;
-                float scaledY = (event.getY() - translateY) / sizeScale;
-
-                switch (event.getAction() & MotionEvent.ACTION_MASK) {
+                switch (event.getActionMasked()) {
                     case MotionEvent.ACTION_DOWN:
-                        if (event.getPointerCount() == 1) {
-                            lastTouchX = scaledX;
-                            lastTouchY = scaledY;
+                        lastTouchX = event.getX();
+                        lastTouchY = event.getY();
+
+                        break;
+                    case MotionEvent.ACTION_POINTER_DOWN:
+                        tap = false;
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        if (event.getPointerCount() == 1 && tap) {
+                            float newTouchX = event.getX();
+                            float newTouchY = event.getY();
+                            drawLine(lastTouchX, lastTouchY, newTouchX, newTouchY);
+                            lastTouchX = newTouchX;
+                            lastTouchY = newTouchY;
+                            invalidate();
+                        } else if (event.getPointerCount() == 2 && !tap) {
+                            float changeInX = event.getX(0) - lastTouchX;
+                            float changeInY = event.getY(0) - lastTouchY;
+                            totalTranslationX += changeInX;
+                            totalTranslationY += changeInY;
+                            lastTouchX = event.getX(0);
+                            lastTouchY = event.getY(0);
+                            invalidate();
+                        }
+                        break;
+                    case MotionEvent.ACTION_UP: {
+                        if (tap) {
                             drawLine(lastTouchX, lastTouchY, lastTouchX + 0.1f, lastTouchY + 0.1f);
                             invalidate();
                         }
+                        tap = true;
                         break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        if (event.getPointerCount() == 1) {
-                            drawLine(lastTouchX, lastTouchY, scaledX, scaledY);
-                            lastTouchX = scaledX;
-                            lastTouchY = scaledY;
-                            invalidate();
-                        } else if (event.getPointerCount() == 2) {
-                            float newDX = event.getX(0) - (lastTouchX * sizeScale + translateX);
-                            float newDY = event.getY(0) - (lastTouchY * sizeScale + translateY);
-                            translateX += newDX;
-                            translateY += newDY;
-                            lastTouchX = scaledX; // Update last touch position for consistent dragging
-                            lastTouchY = scaledY;
-                            invalidate();
-                        }
-                        break;
-
-                    case MotionEvent.ACTION_UP:
-                    case MotionEvent.ACTION_POINTER_UP:
-                        break;
+                    }
                 }
                 return true;
             }
-
-
-
-
-
         });
     }
 
@@ -117,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
             float interpolatedPosition = (float) i / distance;
             float x = startX + interpolatedPosition * (endX - startX);
             float y = startY + interpolatedPosition * (endY - startY);
-            canvas.drawCircle(x, y, 10, paintBrush);
+            canvas.drawCircle(x - totalTranslationX, y - totalTranslationY, 10, paintBrush);
         }
     }
 

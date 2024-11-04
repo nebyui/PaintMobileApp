@@ -10,41 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
-</RelativeLayout>
-
-
-
-
-
-    <!--
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:textSize="60sp"
-        android:textColor="@color/white"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_text"
-        app:layout_constraintBaseline_toBottomOf="@+id/textView"
-        app:layout_constraintBaseline_toEndOf="@+id/textView"
-        app:layout_constraintBaseline_toStartOfOf="@+id/textView"
-        tools:layout_editor_absoluteX="166dp"
-        tools:layout_editor_absoluteY="450dp" />
-    -->
-
-
+    </RelativeLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
