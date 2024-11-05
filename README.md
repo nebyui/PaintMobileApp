@@ -1,6 +1,6 @@
 # Overview
 
-This project is a simple painting app for Android. It includes drawing, erasing, moving the canvas with two fingers, and saving and loading the image. The purpose of this project was to start learning how to make Android apps. 
+This project is a simple painting app for Android. It includes drawing, erasing, moving the canvas with two fingers, and saving and loading the image. The purpose of this project was to start learning how to make Android apps. I would say the most important thing I learned was that I should have used Kotlin instead of Java.
 
 [Software Demo Video](http://youtube.link.goes.here)
 
@@ -14,12 +14,11 @@ ChatGPT was a substantial aid with this project
 
 # Useful Websites
 
-{Make a list of websites that you found helpful in this project}
 * [Youtube - Android Studio tutorial](https://www.youtube.com/watch?v=gNO8PwI2arI)
 * [ChatGPT](https://chatgpt.com)
 
 # Future Work
-* Remaking it in Kotlin (I should have just started with Kotlin to be honest)
+* Remaking it in Kotlin
 * Add canvas zooming in and out
 * Creating color picker and brush size slider
 * Adding layer functionality

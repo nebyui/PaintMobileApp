@@ -34,14 +34,14 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) { //onCreate runs once when the program first starts
         super.onCreate(savedInstanceState);
-        initializeCanvas();  // calls a custom function that creates the canvas
-
         FrameLayout frameLayout = new FrameLayout(this); // FrameLayout is an Android class, it handles and stacks the child elements like the buttons
 
-        View canvasView = new View(this) {
+        initializeCanvas();  // calls a custom function that creates the canvas
+
+        View appView = new View(this) {
             // View is an Android class, it creates the visible UI elements like the canvas and buttons
             @Override
-            protected void onDraw(Canvas canvas) { // This function runs every event loop
+            protected void onDraw(Canvas canvas) { // This function runs for every iteration of main thread
                 canvas.save(); // this saves the current state of the canvas so it does not get messed up when the translations happen
                 canvas.translate(totalTranslationX, totalTranslationY); // moves the canvas around the screen. the parameters are updated elsewhere
                 canvas.drawBitmap(bitmap, 0, 0, null); // the bitmap holds the paint data, this restores the data when changes occur on the canvas
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
                             totalTranslationY += changeInY;
                             initialTouchX = event.getX(0); // updates finger position for next iteration of onTouchEvent
                             initialTouchY = event.getY(0);
-                            invalidate(); // refreshes image
+                            invalidate(); // updates image
                         }
                         break;
                     case MotionEvent.ACTION_UP: { // when the last finger is lifted up
@@ -89,11 +89,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         };
-
-        canvasView.setLayoutParams(new FrameLayout.LayoutParams( // FrameLayout class allow customization of placement and size of different UI elements
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-        ));
 
         Button saveButton = new Button(this); // creates save button, Button class provided by Android
         saveButton.setText("Save");
@@ -128,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         eraserButton.setLayoutParams(eraserButtonLayout);
         eraserButton.setOnClickListener(v -> eraserToggle());
 
-        frameLayout.addView(canvasView);  // adds the canvas and buttons to frameLayout to be added to the UI
+        frameLayout.addView(appView);  // adds the canvas and buttons to frameLayout to be added to the UI
         frameLayout.addView(saveButton);
         frameLayout.addView(loadButton);
         frameLayout.addView(eraserButton);
@@ -202,12 +197,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void eraserToggle() {
-        if (paintBrush.getColor() == Color.WHITE) { // inverts the color and text on button when it is pressed
-            paintBrush.setColor(Color.BLACK);
-            eraserButton.setText("Erase");
-        } else {
+        if (paintBrush.getColor() == Color.BLACK) { // inverts the color and text on button when it is pressed
             paintBrush.setColor(Color.WHITE);
             eraserButton.setText("Draw");
+        } else {
+            paintBrush.setColor(Color.BLACK);
+            eraserButton.setText("Erase");
         }
     }
 }
