@@ -2,7 +2,7 @@
 
 This project is a simple painting app for Android. It includes drawing, erasing, moving the canvas with two fingers, and saving and loading the image. The purpose of this project for me was to begin learning how to make Android apps. I would say the most important thing I learned was that I should have used Kotlin instead of Java.
 
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://www.youtube.com/watch?v=U0pYvlQE11k)
 
 # Development Environment
 
